@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from drivers import motor
+#from drivers import motor
 '''
 Show the use of the Motor driver classes
 '''
