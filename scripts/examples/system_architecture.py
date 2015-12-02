@@ -5,6 +5,8 @@ first raises, then lowers pins
 
 '''
 from time import sleep
+import RPIO
+from RPIO import PWM
 
 ################################################################################
 ################################# DO NOT TOUCH #################################
@@ -52,9 +54,9 @@ class _GetchWindows:
 
 #################### FUNCTIONS ####################
 def ResetPins():
-  RaisePins(10)
+  RaisePins(2)
   #wait(z_seconds)
-  LowerPins(20)
+  LowerPins(2)
 
 def RaisePins(distance):
   TurnPinMotor(100, True, DistToTime(distance))
@@ -63,19 +65,26 @@ def LowerPins(distance):
   TurnPinMotor(100, False, DistToTime(distance))
 
 def DistToTime(dist):
-  return dist/2
+  return dist
 
 def TurnMotor(gpio_pin_pwm,gpio_pin_dir,speed,direction,duration):
+  RPIO.setup(gpio_pin_pwm, RPIO.OUT)
+  RPIO.setup(gpio_pin_dir, RPIO.OUT)
+
   if direction:
     print "Turning Motor on pin: " + str(gpio_pin_pwm) + "UP"
+
   else:
     print "Turning Motor on pin: " + str(gpio_pin_pwm) + "DOWN"
+  RPIO.output(gpio_pin_dir, direction)
+  RPIO.output(gpio_pin_pwm, True)
   sleep(duration)
+  RPIO.output(gpio_pin_pwm, False)
   print "Done Moving"
-
+  RPIO.cleanup()
 
 def TurnPinMotor(speed,direction,duration):
-  TurnMotor(17,16,speed,direction,duration)
+  TurnMotor(19,6,speed,direction,duration)
 
 ###################################################
 
