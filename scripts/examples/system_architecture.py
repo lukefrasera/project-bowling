@@ -54,9 +54,9 @@ class _GetchWindows:
 
 #################### FUNCTIONS ####################
 def ResetPins():
-  RaisePins(2)
+  RaisePins(6)
   #wait(z_seconds)
-  LowerPins(2)
+  LowerPins(6)
 
 def RaisePins(distance):
   TurnPinMotor(100, True, DistToTime(distance))
