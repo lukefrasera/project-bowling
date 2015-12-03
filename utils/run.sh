@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-sudo ../scripts/examples/system_architecture.py
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+sudo ${DIR}/../scripts/examples/system_architecture.py
