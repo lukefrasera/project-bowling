@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+pushd ~/Documents/project-bowling/
+hg pull
+hg update
+popd

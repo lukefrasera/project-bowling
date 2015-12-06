@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+pushd ~/Documents/project-bowling/utils
+
+sudo ./run.sh
+
+popd
