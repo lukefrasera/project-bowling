@@ -63,17 +63,9 @@ if [ $COUNT = 0 ]; then
 fi
 
 if [ $OPT_D = true ]; then
-ssh_output=$(
-ssh -t -q turkey@${HOST} <<ENDSSH
-    cd ~/Documents/project-bowling/
-    echo "Pulling from Repository..." >&2
-    hg pull
-    hg update
-    echo "Current repo state deployed on PI" >&2
-ENDSSH
-)
+  ssh turkey@${HOST} ~/Documents/project-bowling/utils/.deploy
 fi
 
 if [ $OPT_R = true ]; then
-  ssh turkey@${HOST} ~/Documents/project-bowling/utils/run.sh
+  ssh turkey@${HOST} ~/Documents/project-bowling/utils/.run
 fi
