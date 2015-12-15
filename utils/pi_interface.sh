@@ -67,5 +67,5 @@ if [ $OPT_D = true ]; then
 fi
 
 if [ $OPT_R = true ]; then
-  ssh turkey@${HOST} /home/turkey/Documents/project-bowling/utils/.run
+  ssh -t turkey@${HOST} /home/turkey/Documents/project-bowling/utils/.run
 fi
