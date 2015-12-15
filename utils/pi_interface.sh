@@ -47,7 +47,7 @@ done
 
 shift $((OPTIND-1))
 HOST="raspberrypi.local"
-if [ $OPT_H != "" ]; then
+if [ "$OPT_H" != "" ]; then
   HOST=$OPT_H
 fi
 echo "Host name: ${HOST}"
@@ -63,9 +63,9 @@ if [ $COUNT = 0 ]; then
 fi
 
 if [ $OPT_D = true ]; then
-  ssh turkey@${HOST} ~/Documents/project-bowling/utils/.deploy
+  ssh turkey@${HOST} /home/turkey/Documents/project-bowling/utils/.deploy
 fi
 
 if [ $OPT_R = true ]; then
-  ssh turkey@${HOST} ~/Documents/project-bowling/utils/.run
+  ssh turkey@${HOST} /home/turkey/Documents/project-bowling/utils/.run
 fi
