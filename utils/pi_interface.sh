@@ -63,9 +63,9 @@ if [ $COUNT = 0 ]; then
 fi
 
 if [ $OPT_D = true ]; then
-  ssh turkey@${HOST} /home/turkey/Documents/project-bowling/utils/.deploy
+  ssh turkey@${HOST} -X /home/turkey/Documents/project-bowling/utils/.deploy
 fi
 
 if [ $OPT_R = true ]; then
-  ssh -t turkey@${HOST} /home/turkey/Documents/project-bowling/utils/.run
+  ssh -t turkey@${HOST} -X /home/turkey/Documents/project-bowling/utils/.run
 fi

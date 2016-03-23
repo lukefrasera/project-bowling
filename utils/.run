@@ -2,6 +2,6 @@
 
 pushd ~/Documents/project-bowling/utils
 
-sudo ./run.sh
+./run.sh
 
 popd
