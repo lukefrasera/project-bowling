@@ -1,7 +1,15 @@
 #!/usr/bin/env python
 import sys
+import time
 sys.path.append('../../')
 from drivers.application import application
+
+class State:
+  def __init__(self):
+    self.BEGIN = 0
+    self.CALIBRATE = 1
+    self.PLAY = 2
+    self.QUIT = 3
 
 
 class BowlingGame(application.Program):
@@ -9,20 +17,77 @@ class BowlingGame(application.Program):
     super(BowlingGame, self).__init__()
     print "Welcome To Bowling"
     self.running = True
+    self.state = State().CALIBRATE
+    self.calibrate_part = 0
 
-  # def KeyPressEvent(self, e):
-  #   while e.Key != '4'
-  #     #if e.Key == 'q':
-  #       #print "program closing"
-  #       #self.running = False
-  #     if e.Key == '1'
-  #       print "Move pins up to calibrate max"
-  #     if e.Key == '2'
-  #       print "Move pins down to calibrate max"
-  #     if e.Key == '3'
-  #       print "Confirm calibrated max"
-  #   else 
-  #     print "Emergency STOP"
+  def Start(self):
+    self.show()
+
+  def Quit(self):
+    pass
+
+  def KeyPressEvent(self, e):
+    # Check which state I am in
+    if self.state == State().BEGIN:
+      #Do the begin KEYs
+      pass
+    if self.state == State().CALIBRATE:
+      # Do the keys for calibration
+      if e.text() == '4':
+        self.Quit()
+      if e.text() == '3':
+        if self.calibrate_part == 0:
+          print 'Save Max Encorder value'
+          self.encoder_max = 'max'
+          self.calibrate_part = 1
+        elif self.calibrate_part == 1:
+          print 'Save Min Encoder value'
+          self.encoder_min = 'min'
+          self.state = State().PLAY
+      if e.text() == '2':
+        print 'start moving pins down'
+      if e.text() == '1':
+        print 'start moving pins up'
+        
+    if self.state == State().PLAY:
+      # do the keys for PLAY
+      pass
+    if self.state == State().QUIT:
+      # do keys for quit
+      pass
+        
+
+  def KeyReleaseEvent(self, e):
+    if self.state == State().BEGIN:
+      #Do the begin KEYs
+      pass
+    if self.state == State().CALIBRATE:
+      # Do the keys for calibration
+      if e.text() == '1':
+        print 'stop pins up'
+      if e.text() == '2':
+        print 'stop pin down'
+    if self.state == State().PLAY:
+      # do the keys for PLAY
+      pass
+    if self.state == State().QUIT:
+      # do keys for quit
+      pass
+
+
+
+    # while e.Key != '4'
+    #   #if e.Key == 'q':
+    #     #print "program closing"
+    #     #self.running = False
+    #   if e.Key == '1'
+    #     print "Move pins up to calibrate max"
+    #   if e.Key == '2'
+    #     print "Move pins down to calibrate max"
+    #   if e.Key == '3'
+    #     print "Confirm calibrated max"
+    # else 
+    #   print "Emergency STOP"
 
   def CalibrateMax(self, e):
     while e.Key != '4':
@@ -52,8 +117,6 @@ class BowlingGame(application.Program):
     else: 
       print "Emergency STOP"
 
-  def KeyReleaseEvent(self, e):
-    pass
 
   def InitiateCalibration(button):
     CalibrateMax()
