@@ -89,7 +89,7 @@ class BowlingGame(application.Program):
       #   print "Confirm calibrated min"
     else: 
       print "Emergency STOP"
-
+#test comment
 def RaisePins(distance):
   TurnPinMotor(100, True, DistToTime(distance))
 
