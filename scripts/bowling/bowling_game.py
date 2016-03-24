@@ -6,6 +6,7 @@ from drivers.application import application
 
 class BowlingGame(application.Program):
   def __init__(self):
+    super(BowlingGame, self).__init__()
     print "Welcome To Bowling"
     self.running = True
 
@@ -119,9 +120,10 @@ def TurnPinMotor(speed,direction,duration):
   TurnMotor(19,6,speed,direction,duration)
 
 def main():
+  a = application.App(sys.argv)
   game = BowlingGame()
-  a = application.App(game)
-  a.Start()
+  game.Start()
+  a.Wait()
 
 if __name__ == '__main__':
   main()
