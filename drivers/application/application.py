@@ -4,7 +4,7 @@
 import time
 import sys
 
-if 'Linux' in sys.platform:
+if 'Linux' in sys.platformor or 'linux' in sys.platform:
   from PyQt4.QtGui import QWidget, QApplication
 else:
   from PyQt5.QtWidgets import QApplication, QWidget
