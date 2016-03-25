@@ -6,7 +6,7 @@ from drivers.application import application
 
 class State:
   def __init__(self):
-    self.BEGIN = 0
+    #self.BEGIN = 0
     self.CALIBRATE = 1
     self.PLAY = 2
     self.QUIT = 3
@@ -24,13 +24,14 @@ class BowlingGame(application.Program):
     self.show()
 
   def Quit(self):
-    pass
+    #pass
+    print 'Quit'
 
   def KeyPressEvent(self, e):
     # Check which state I am in
-    if self.state == State().BEGIN:
+    #if self.state == State().BEGIN:
       #Do the begin KEYs
-      pass
+     # pass
     if self.state == State().CALIBRATE:
       # Do the keys for calibration
       if e.text() == '4':
@@ -41,7 +42,8 @@ class BowlingGame(application.Program):
           self.encoder_max = 'max'
           self.calibrate_part = 1
         elif self.calibrate_part == 1:
-          print 'Save Min Encoder value'
+          print 'Save Min Encoder value; Ready to play'
+          #print 'ready to play'
           self.encoder_min = 'min'
           self.state = State().PLAY
       if e.text() == '2':
@@ -51,22 +53,31 @@ class BowlingGame(application.Program):
         
     if self.state == State().PLAY:
       # do the keys for PLAY
-      pass
+      if e.text() == '1':
+        print 'Reset Pins'
+      if e.text() == '2':
+        print 'Store Pins'
+      if e.text() == '4':
+        self.Quit()
     if self.state == State().QUIT:
       # do keys for quit
       pass
         
 
   def KeyReleaseEvent(self, e):
-    if self.state == State().BEGIN:
+    #if self.state == State().BEGIN:
       #Do the begin KEYs
-      pass
+     # pass
     if self.state == State().CALIBRATE:
       # Do the keys for calibration
       if e.text() == '1':
         print 'stop pins up'
       if e.text() == '2':
         print 'stop pin down'
+      if e.text() == '3':
+        pass
+      if e.text() == '4':
+        pass
     if self.state == State().PLAY:
       # do the keys for PLAY
       pass
