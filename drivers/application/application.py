@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # from Tkinter import *
-from pyxhook import HookManager
+# from pyxhook import HookManager
 import time
-import signal
-from tools import get_char as _getch
 import sys
 
-from PyQt4.QtGui import QWidget, QApplication
+if 'Linux' in sys.platform:
+  from PyQt4.QtGui import QWidget, QApplication
+else:
+  from PyQt5.QtWidgets import QApplication, QWidget
 
 class Program(QWidget):
   def __init__(self):

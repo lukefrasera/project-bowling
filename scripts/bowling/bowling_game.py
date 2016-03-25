@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 import sys
 import time
-sys.path.append('../../')
+import os
+
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),'../../'))
 from drivers.application import application
 
 class State:
