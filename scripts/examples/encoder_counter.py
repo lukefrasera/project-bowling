@@ -92,14 +92,16 @@ def Encoder(channel_A,channel_B):
   RPIO.setup(channel_B, RPIO.IN)
 
   previous = RPIO.input(channel_A)
+  index = 0
   while True:
     value = RPIO.input(channel_A)
     if value != previous:
+      index += 1
       print 'Changed'
-
-
     previous = value
 
+
+      
 
 ##Counter Clockwise
   #if RPIO.input(6) == 'True'
