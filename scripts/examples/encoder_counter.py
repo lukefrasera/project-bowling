@@ -97,7 +97,7 @@ def Encoder(channel_A,channel_B):
     value = RPIO.input(channel_A)
     if value != previous:
       index += 1
-      print 'Changed'
+      print 'Changed: %d times' % (index)
     previous = value
 
 
