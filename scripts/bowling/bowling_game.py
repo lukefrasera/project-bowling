@@ -13,6 +13,7 @@ class State:
     self.CALIBRATE = 1
     self.PLAY = 2
     self.QUIT = 3
+    self.DONE = 4
 
 
 class BowlingGame(application.Program):
@@ -26,9 +27,9 @@ class BowlingGame(application.Program):
   def Start(self):
     self.show()
 
-  def Quit(self):
+  #def Quit(self):
     #pass
-    print 'Quit'
+   # print 'Quit'
 
   def KeyPressEvent(self, e):
     # Check which state I am in
@@ -61,9 +62,12 @@ class BowlingGame(application.Program):
       if e.text() == '2':
         print 'Store Pins'
       if e.text() == '4':
-        self.Quit()
+        self.state = State().QUIT
     if self.state == State().QUIT:
       # do keys for quit
+      print 'Quit'
+      self.state = State().DONE
+    if self.state == State().DONE:
       pass
         
 
@@ -86,6 +90,8 @@ class BowlingGame(application.Program):
       pass
     if self.state == State().QUIT:
       # do keys for quit
+      pass
+    if self.state == State().DONE:
       pass
 
 
