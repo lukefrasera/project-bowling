@@ -62,20 +62,26 @@ def DetectDirection(previous_change, previous_type, current_change, current_type
       direction = 1
     if current_type == False and previous_type == True:
       direction = 1
-    if current_type =- True and previous_type == True:
+    if current_type == True and previous_type == True:
       direction = -1
-    if current_type =- False and previous_type == False:
+    if current_type == False and previous_type == False:
       direction = -1
   if previous_change == current_change:
     direction = -previous_direction
 
+
+class GPIOState:
+    def __init__(self, init_pin, init_edge):
+        self.pin = init_pin
+        self.edge = init_edge
 
 class EncoderReader:
   def __init__(self, pin_a, pin_b):
     # Initialize GPIO Callbacks
     self.pin_a = pin_a
     self.pin_b = pin_b
-    self.previous_state = -1
+    self.previous_state = State
+    self.state = 0
 
     RPIO.add_interrupt_callback(pin_a, self.UpdateState, threaded_callback=True)
     RPIO.add_interrupt_callback(pin_b, self.UpdateState, threaded_callback=True)
@@ -85,7 +91,9 @@ class EncoderReader:
     if self.pin_a == gpio:
       print "Pin A has changed ==> %d" %(value)
     else:
-      print "Pin A has changed ==> %d" %(value)
+      print "Pin B has changed ==> %d" %(value)
+
+    self.previous_state = gpio
 
 ###################################################
 
