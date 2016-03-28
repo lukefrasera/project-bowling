@@ -91,6 +91,8 @@ def TurnPinMotor(speed,direction,duration):
 
 def main():
   RPIO.setup(6,RPIO.IN)
+  RPIO.setup(13,RPIO.IN)
+  RPIO.setup(26,RPIO.IN)
   while True:
     if RPIO.input(6):
       ResetPins()
