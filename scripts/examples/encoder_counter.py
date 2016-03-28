@@ -58,15 +58,22 @@ class EncoderReader:
     self.previous_state = GPIOState(-1,-1)
     self.state = 0
     self.direction = 0
+    self.intialized = False
 
     RPIO.add_interrupt_callback(pin_a, self.UpdateState, threaded_callback=True)
     RPIO.add_interrupt_callback(pin_b, self.UpdateState, threaded_callback=True)
 
   def UpdateState(self, gpio, value):
-
-
     self.direction = self.DetectDirection(self.previous_state.pin, self.previous_state.edge, gpio, value, self.direction)
     print "Direction: %d" % (self.direction)
+
+    if self.direction != 0:
+      self.initialized = True
+
+    if self.initialized:
+      self.state += self.direction * 1
+
+    print "Motor Has Turned [%f] degrees" % (self.state * 1.0 / 64.0)
     self.previous_state.pin = gpio
     self.previous_state.edge = value
 
