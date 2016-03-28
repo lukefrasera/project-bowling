@@ -65,12 +65,13 @@ class EncoderReader:
   def UpdateState(self, gpio, value):
 
 
-    self.direction = DetectDirection(self.previous_state.pin, self.previous_state.edge, gpio, value, self.direction)
+    self.direction = self.DetectDirection(self.previous_state.pin, self.previous_state.edge, gpio, value, self.direction)
     print "Direction: %d" % (self.direction)
     self.previous_state.pin = gpio
     self.previous_state.edge = value
 
   def DetectDirection(self, previous_change, previous_type, current_change, current_type, previous_direction):
+    direction = 0
     if previous_change == self.pin_a and current_change == self.pin_b:
       # A happened and then B ==> A | B
       if current_type == True and previous_type == False:
@@ -94,6 +95,8 @@ class EncoderReader:
         direction = -1
     if previous_change == current_change:
       direction = -previous_direction
+
+    return direction
 
 ###################################################
 
