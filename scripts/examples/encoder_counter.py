@@ -1,92 +1,9 @@
 #!/usr/bin/env python
-'''
-resets pins after a key input
-first raises, then lowers pins
 
-'''
 from time import sleep
 import RPIO
 from RPIO import PWM
 
-################################################################################
-################################# DO NOT TOUCH #################################
-################################################################################
-class _Getch:
-  '''
-  Gets a single character from standard input.  Does not echo to the screen.
-  '''
-  def __init__(self):
-    try:
-      self.impl = _GetchWindows()
-    except ImportError:
-      self.impl = _GetchUnix()
-
-  def __call__(self): return self.impl()
-
-
-class _GetchUnix:
-  def __init__(self):
-    import tty, sys
-
-  def __call__(self):
-    import sys, tty, termios
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    if ch == '\x03':
-      raise KeyboardInterrupt
-    return ch
-
-
-class _GetchWindows:
-  def __init__(self):
-    import msvcrt
-
-  def __call__(self):
-    import msvcrt
-    return msvcrt.getch()
-################################################################################
-
-
-#################### FUNCTIONS ####################
-#def ResetPins():
- # RaisePins(6)
-  #wait(z_seconds)
-  #LowerPins(6)
-
-# # def RaisePins(distance):
-# #   TurnPinMotor(100, True, DistToTime(distance))
-
-# # def LowerPins(distance):
-#   TurnPinMotor(100, False, DistToTime(distance))
-
-# def DistToTime(dist):
-#   return dist
-
-# def TurnMotor(gpio_pin_pwm,gpio_pin_dir,speed,direction,duration):
-#   RPIO.setup(gpio_pin_pwm, RPIO.OUT)
-#   RPIO.setup(gpio_pin_dir, RPIO.OUT)
-
-#   #if direction:
-#    # print "Turning Motor on pin: " + str(gpio_pin_pwm) + "UP"
-
-#   #else:
-#    # print "Turning Motor on pin: " + str(gpio_pin_pwm) + "DOWN"
-#   RPIO.output(gpio_pin_dir, direction)
-#   RPIO.output(gpio_pin_pwm, True)
-#   sleep(duration)
-#   RPIO.output(gpio_pin_pwm, False)
-#   print "Done Moving"
-#   RPIO.cleanup()
-
-# def TurnPinMotor(speed,direction,duration):
-#   TurnMotor(19,6,speed,direction,duration)
-
-################ENCODER COUNTER
 def Encoder(channel_A,channel_B):
   RPIO.setup(channel_A, RPIO.IN)
   RPIO.setup(channel_B, RPIO.IN)
@@ -127,74 +44,59 @@ def Encoder(channel_A,channel_B):
     previous_A = value_A
     previous_B = value_B
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-def DetectDirection(previous_change, previuos_type, current_change, current_type, previous_direction):
+def DetectDirection(previous_change, previous_type, current_change, current_type, previous_direction):
   if previous_change == 'a' and current_change == 'b':
     # A happened and then B ==> A | B
-    if current_type == True and previuos_type == False:
+    if current_type == True and previous_type == False:
       direction = -1
-    if current_type == False and previuos_type == True:
+    if current_type == False and previous_type == True:
       direction = -1
 
-    if current_type == True and previuos_type == True:
+    if current_type == True and previous_type == True:
       direction = 1
-    if current_type == False and previuos_type == False:
+    if current_type == False and previous_type == False:
       direction = 1
 
   if previous_change == 'b' and current_change == 'a':
-    if current_type == True and previuos_type == False:
+    if current_type == True and previous_type == False:
       direction = 1
-    if current_type == False and previuos_type == True:
+    if current_type == False and previous_type == True:
       direction = 1
-    if current_type =- True and previuos_type == True:
+    if current_type =- True and previous_type == True:
       direction = -1
-    if current_type =- False and previuos_type == False:
+    if current_type =- False and previous_type == False:
       direction = -1
   if previous_change == current_change:
     direction = -previous_direction
 
 
-##Counter Clockwise
-  #if RPIO.input(6) == 'True'
+class EncoderReader:
+  def __init__(self, pin_a, pin_b):
+    # Initialize GPIO Callbacks
+    self.pin_a = pin_a
+    self.pin_b = pin_b
+    self.previous_state = -1
 
-  # if RPIO.input(14) == 'False' & RPIO.input(15) == 'False'
-  # if RPIO.input(14) == 'False' & RPIO.input(15) == 'True'
-  # if RPIO.input(14) == 'True' & RPIO.input(15) == 'True'  
-  # if RPIO.input(14) == 'True' & RPIO.input(15) == 'False' 
-##Clockwise
-  #if RPIO.input(6) == 'False'
+    RPIO.add_interrupt_callback(pin_a, self.UpdateState, threaded_callback=True)
+    RPIO.add_interrupt_callback(pin_b, self.UpdateState, threaded_callback=True)
 
-  # if RPIO.input(14) == 'True' & RPIO.input(15) == 'False' 
-  # if RPIO.input(14) == 'True' & RPIO.input(15) == 'True' 
-  # if RPIO.input(14) == 'False' & RPIO.input(15) == 'True'
-  # if RPIO.input(14) == 'False' & RPIO.input(15) == 'False'
-def ChannelAHigh():
-  count() 
+  def UpdateState(self, gpio, value):
+
+    if self.pin_a == gpio:
+      print "Pin A has changed ==> %d" %(value)
+    else:
+      print "Pin A has changed ==> %d" %(value)
 
 ###################################################
 
 def main():
   # Initialize program
-  Encoder(14,15)
+  encoder = EncoderReader(14, 15)
+
+  RPIO.wait_for_interrupts()
+
+  while True:
+    pass
 
 if __name__ == '__main__':
   main()
