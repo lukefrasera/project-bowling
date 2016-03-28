@@ -44,31 +44,6 @@ def Encoder(channel_A,channel_B):
     previous_A = value_A
     previous_B = value_B
 
-def DetectDirection(previous_change, previous_type, current_change, current_type, previous_direction):
-  if previous_change == 'a' and current_change == 'b':
-    # A happened and then B ==> A | B
-    if current_type == True and previous_type == False:
-      direction = -1
-    if current_type == False and previous_type == True:
-      direction = -1
-
-    if current_type == True and previous_type == True:
-      direction = 1
-    if current_type == False and previous_type == False:
-      direction = 1
-
-  if previous_change == 'b' and current_change == 'a':
-    if current_type == True and previous_type == False:
-      direction = 1
-    if current_type == False and previous_type == True:
-      direction = 1
-    if current_type == True and previous_type == True:
-      direction = -1
-    if current_type == False and previous_type == False:
-      direction = -1
-  if previous_change == current_change:
-    direction = -previous_direction
-
 
 class GPIOState:
     def __init__(self, init_pin, init_edge):
@@ -80,20 +55,45 @@ class EncoderReader:
     # Initialize GPIO Callbacks
     self.pin_a = pin_a
     self.pin_b = pin_b
-    self.previous_state = State
+    self.previous_state = GPIOState(-1,-1)
     self.state = 0
+    self.direction = 0
 
     RPIO.add_interrupt_callback(pin_a, self.UpdateState, threaded_callback=True)
     RPIO.add_interrupt_callback(pin_b, self.UpdateState, threaded_callback=True)
 
   def UpdateState(self, gpio, value):
 
-    if self.pin_a == gpio:
-      print "Pin A has changed ==> %d" %(value)
-    else:
-      print "Pin B has changed ==> %d" %(value)
 
-    self.previous_state = gpio
+    self.direction = DetectDirection(self.previous_state.pin, self.previous_state.edge, gpio, value, self.direction)
+    print "Direction: %d" % (self.direction)
+    self.previous_state.pin = gpio
+    self.previous_state.edge = value
+
+  def DetectDirection(self, previous_change, previous_type, current_change, current_type, previous_direction):
+    if previous_change == self.pin_a and current_change == self.pin_b:
+      # A happened and then B ==> A | B
+      if current_type == True and previous_type == False:
+        direction = -1
+      if current_type == False and previous_type == True:
+        direction = -1
+
+      if current_type == True and previous_type == True:
+        direction = 1
+      if current_type == False and previous_type == False:
+        direction = 1
+
+    if previous_change == self.pin_b and current_change == self.pin_a:
+      if current_type == True and previous_type == False:
+        direction = 1
+      if current_type == False and previous_type == True:
+        direction = 1
+      if current_type == True and previous_type == True:
+        direction = -1
+      if current_type == False and previous_type == False:
+        direction = -1
+    if previous_change == current_change:
+      direction = -previous_direction
 
 ###################################################
 
