@@ -91,17 +91,87 @@ def Encoder(channel_A,channel_B):
   RPIO.setup(channel_A, RPIO.IN)
   RPIO.setup(channel_B, RPIO.IN)
 
-  previous = RPIO.input(channel_A)
-  index = 0
+  previous_A = RPIO.input(channel_A)
+  previous_B = RPIO.input(channel_B)
+  index_A = 0
+  index_B = 0
+  edge_A = -1
+  edge_B = -1
+  previous_change = ''
+  current_change = ''
   while True:
-    value = RPIO.input(channel_A)
-    if value != previous:
-      index += 1
-      print 'Changed: %d times' % (index)
-    previous = value
+    value_A = RPIO.input(channel_A)
+    value_B = RPIO.input(channel_B)
+    if value_A != previous_A:
+      current_change = 'a'
+      index_A += 1
+      print 'A Changed: %d times' % (index_A)
+      if value_A == True:
+        edge_A = True
+      else:
+        edge_A = False
+      previous_change = current_change
+
+
+    if value_B != previous_B:
+      current_change = 'b'
+      index_B += 1
+      print 'B Changed: %d times' % (index_B)
+      if value_B == True:
+        edge_B = True
+      else:
+        edge_B = False
+      previous_change = current_change
+
+
+    previous_A = value_A
+    previous_B = value_B
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
       
+def DetectDirection(previous_change, previuos_type, current_change, current_type, previous_direction):
+  if previous_change == 'a' and current_change == 'b':
+    # A happened and then B ==> A | B
+    if current_type == True and previuos_type == False:
+      direction = -1
+    if current_type == False and previuos_type == True:
+      direction = -1
+
+    if current_type == True and previuos_type == True:
+      direction = 1
+    if current_type == False and previuos_type == False:
+      direction = 1
+
+  if previous_change == 'b' and current_change == 'a':
+    if current_type == True and previuos_type == False:
+      direction = 1
+    if current_type == False and previuos_type == True:
+      direction = 1
+    if current_type =- True and previuos_type == True:
+      direction = -1
+    if current_type =- False and previuos_type == False:
+      direction = -1
+  if previous_change == current_change:
+    direction = -previous_direction
+
 
 ##Counter Clockwise
   #if RPIO.input(6) == 'True'
