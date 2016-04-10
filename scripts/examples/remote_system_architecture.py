@@ -95,19 +95,20 @@ def main():
   get_char = _Getch()
   print "Program Ready!"
   # Main loop
+  ser = serial.Serial('/dev/ttyUSB0', 9600)
+
   while True:
-    ch = get_char()
-    # if button pressed
-    if ch:
-      # if key == r
-      if ch =='r':
-        print "Resetting Pins"
-        ResetPins()
-      # if key doesn't = r
-      elif ch == 'q':
-        break
-      else:
-        print "Key not recognized"
+    button = ser.read()
+    if button == 0:
+      #raise pins
+      RaisePins(4)
+    if button == 1:
+      #reset pins
+      ResetPins()
+    if button == 2:
+      LowerPins(2)
+    if button == 3:
+      RaisePins(6)
   # close program
   print "Closing Program: Thanks for Playing"
 
