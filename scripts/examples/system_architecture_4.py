@@ -53,10 +53,10 @@ class _GetchWindows:
 
 
 #################### FUNCTIONS ####################
-def ResetPins(dist):
-  RaisePins(dist)
+def ResetPins():
+  RaisePins(4)
   #wait(z_seconds)
-  LowerPins(dist)
+  LowerPins(4)
 
 def RaisePins(distance):
   TurnPinMotor(100, True, DistToTime(distance))
@@ -101,7 +101,7 @@ def main():
       # if key == r
       if ch =='r':
         print "Resetting Pins"
-        ResetPins(float(sys.argv[1]))
+        ResetPins()
       # if key doesn't = r
       elif ch == 'q':
         break
