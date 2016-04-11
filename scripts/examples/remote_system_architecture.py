@@ -8,7 +8,6 @@ from time import sleep
 import RPIO
 from RPIO import PWM
 import serial
-
 ################################################################################
 ################################# DO NOT TOUCH #################################
 ################################################################################
@@ -99,16 +98,17 @@ def main():
 
   while True:
     button = ser.read()
-    if button == 0:
+    if button == '\x00':
       #raise pins
       RaisePins(4)
-    if button == 1:
+    if button == '\x01':
       #reset pins
       ResetPins()
-    if button == 2:
+    if button == '\x02':
       LowerPins(2)
-    if button == 3:
+    if button == '\x03':
       RaisePins(6)
+    ser.flushInput()
   # close program
   print "Closing Program: Thanks for Playing"
 

@@ -84,7 +84,7 @@ def TurnMotor(gpio_pin_pwm,gpio_pin_dir,speed,direction,duration):
   RPIO.cleanup()
 
 def TurnPinMotor(speed,direction,duration):
-  TurnMotor(19,6,speed,direction,duration)
+  TurnMotor(16,6,speed,direction,duration)
 
 ###################################################
 

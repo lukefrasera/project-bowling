@@ -3,47 +3,9 @@
 from time import sleep
 import RPIO
 from RPIO import PWM
-
-def Encoder(channel_A,channel_B):
-  RPIO.setup(channel_A, RPIO.IN)
-  RPIO.setup(channel_B, RPIO.IN)
-
-  previous_A = RPIO.input(channel_A)
-  previous_B = RPIO.input(channel_B)
-  index_A = 0
-  index_B = 0
-  edge_A = -1
-  edge_B = -1
-  previous_change = ''
-  current_change = ''
-  while True:
-    value_A = RPIO.input(channel_A)
-    value_B = RPIO.input(channel_B)
-    if value_A != previous_A:
-      current_change = 'a'
-      index_A += 1
-      print 'A Changed: %d times' % (index_A)
-      if value_A == True:
-        edge_A = True
-      else:
-        edge_A = False
-      previous_change = current_change
-
-
-    if value_B != previous_B:
-      current_change = 'b'
-      index_B += 1
-      print 'B Changed: %d times' % (index_B)
-      if value_B == True:
-        edge_B = True
-      else:
-        edge_B = False
-      previous_change = current_change
-
-
-    previous_A = value_A
-    previous_B = value_B
-
+import RPi.GPIO as GPIO
+import thread
+import time
 
 class GPIOState:
     def __init__(self, init_pin, init_edge):
@@ -58,22 +20,23 @@ class EncoderReader:
     self.previous_state = GPIOState(-1,-1)
     self.state = 0
     self.direction = 0
-    self.intialized = False
-
-    RPIO.add_interrupt_callback(pin_a, self.UpdateState, threaded_callback=True)
-    RPIO.add_interrupt_callback(pin_b, self.UpdateState, threaded_callback=True)
-
+    self.initialized = False
+    self.nextPrintTime = 0
+    RPIO.add_interrupt_callback(pin_a, self.UpdateState, threaded_callback = True)
+    RPIO.add_interrupt_callback(pin_b, self.UpdateState, threaded_callback = True)
+    #RPIO.add_interrupt_callback(pin_b, self.UpdateState)
+    #RPIO.add_interrupt_callback(pin_a, self.UpdateState)
+    thread.start_new_thread(self.encoderWatchdog, ())
   def UpdateState(self, gpio, value):
     self.direction = self.DetectDirection(self.previous_state.pin, self.previous_state.edge, gpio, value, self.direction)
-    print "Direction: %d" % (self.direction)
+    #print "Direction: %d" % (self.direction)
 
     if self.direction != 0:
       self.initialized = True
 
     if self.initialized:
-      self.state += self.direction * 1
-
-    print "Motor Has Turned [%f] degrees" % (self.state * 1.0 / 64.0)
+      self.state += self.direction
+    #print "Motor Has Turned [%d] degrees" % (self.state / 64.0 * 360.0)
     self.previous_state.pin = gpio
     self.previous_state.edge = value
 
@@ -104,17 +67,60 @@ class EncoderReader:
       direction = -previous_direction
 
     return direction
+  def encoderWatchdog(self):
+     while True:
+       print self.state
+       time.sleep(.5)
 
+class MotorMover:
+  def __init__(self, encoder):
+    self.encoder = encoder
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(27, GPIO.OUT)
+    GPIO.setup(17, GPIO.OUT)
+
+    self.p = GPIO.PWM(27, 100)
+  def TurnMotor(self):
+      self.p.start(50)
+
+  def StopMotor(self):
+      self.p.stop()
+  def SetDirection(self, value):
+      GPIO.output(17, (value+1)/2)
+
+  def GoToState(self, state):
+      direction = self.encoder.state - state
+      direction = direction / abs(direction)
+      self.SetDirection(direction)
+      self.TurnMotor()
+      while self.encoder.state < (state - 10) or self.encoder.state > (state + 10):
+          direction = self.encoder.state - state
+          direction = direction / abs(direction)
+          self.SetDirection(direction)
+          time.sleep(.001)
+      self.StopMotor()
+      print self.encoder.state
 ###################################################
 
 def main():
   # Initialize program
   encoder = EncoderReader(14, 15)
+  motor = MotorMover(encoder)
 
-  RPIO.wait_for_interrupts()
-
+  RPIO.wait_for_interrupts(threaded=True)
+  
+  #while True:
+  #  value = int(raw_input("Input where to go:"))
+  #  print value
+  #  motor.GoToState(value)
+  #  time.sleep(.2)
   while True:
-    pass
+      motor.GoToState(10000)
+      time.sleep(.2)
+      motor.GoToState(0)
+      time.sleep(.2)
+
 
 if __name__ == '__main__':
   main()

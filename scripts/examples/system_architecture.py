@@ -7,6 +7,7 @@ first raises, then lowers pins
 from time import sleep
 import RPIO
 from RPIO import PWM
+import sys
 
 ################################################################################
 ################################# DO NOT TOUCH #################################
