@@ -83,7 +83,7 @@ def TurnMotor(gpio_pin_pwm,gpio_pin_dir,speed,direction,duration):
   sleep(duration)
   RPIO.output(gpio_pin_pwm, False)
   print "Done Moving"
-  RPIO.cleanup()
+  #RPIO.cleanup()
 
 def TurnPinMotor(speed,direction,duration):
   TurnMotor(19,6,speed,direction,duration)
@@ -97,10 +97,12 @@ def main():
   print "Program Ready!"
   # Main loop
   ser = serial.Serial('/dev/ttyUSB0', 9600)
+  RPIO.setup(17,RPIO.IN, pull_up_down = RPIO.PUD_DOWN)
   ###Calibration - new
   loweringtime = 0
- while True:
-    button = ser.read()
+  print "In calibration state"
+  while True:
+    button = ser.read(1)
     #button 1
     if button == '\x01':
       #lower for as long as button is pressed
@@ -113,10 +115,12 @@ def main():
     #button 3
     # if button == '\x03':
     #   RaisePins(6)
-    # ser.flushInput()
+    ser.flushInput()
+    ser.flushInput()
+  print "In play state"
 ###Play - old
   while True:
-    button = ser.read()
+    button = ser.read(1)
     #button 2
     if button == '\x00':
       #storage: raise pins until the IR LED is flipped and end game - quit
@@ -129,9 +133,12 @@ def main():
     #button 4
     if button == '\x02':
       #emergency stop
+      pass
     #button 3
     if button == '\x03':
       #emergency stop
+      pass
+    ser.flushInput()
     ser.flushInput()
   # close program
 
