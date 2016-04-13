@@ -8,7 +8,6 @@ from time import sleep
 import RPIO
 from RPIO import PWM
 import serial
-import time
 ################################################################################
 ################################# DO NOT TOUCH #################################
 ################################################################################
@@ -102,7 +101,7 @@ def main():
   ser = serial.Serial('/dev/ttyUSB0', 9600)
   # flush serial buffer so that all previous commands are removed
   ser.flush() 
-  time.sleep(.1) # wait for the buffer to be freed
+  sleep(.1) # wait for the buffer to be freed
   ###Calibration - new
   loweringtime = 0
   raisingtime = 0
