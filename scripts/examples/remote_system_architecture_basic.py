@@ -98,7 +98,7 @@ def main():
   get_char = _Getch()
   print "Program Ready!"
   # Main loop
-ser = serial.Serial('/dev/ttyUSB0', 9600)
+  ser = serial.Serial('/dev/ttyUSB0', 9600)
   ###Calibration - new
   loweringtime = 0
   raisingtime = 0
@@ -128,7 +128,7 @@ ser = serial.Serial('/dev/ttyUSB0', 9600)
 
   print "In store and quit state"
 ###Play - old
-  storetime = 0
+storetime = 0
   while True:
     button = ser.read(1)
     #button 1
