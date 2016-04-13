@@ -128,7 +128,7 @@ def main():
 
   print "In store and quit state"
 ###Play - old
-storetime = 0
+  storetime = 0
   while True:
     button = ser.read(1)
     #button 1
