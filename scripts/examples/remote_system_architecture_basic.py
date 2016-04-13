@@ -98,7 +98,7 @@ def main():
   get_char = _Getch()
   print "Program Ready!"
   # Main loop
-
+ser = serial.Serial('/dev/ttyUSB0', 9600)
   ###Calibration - new
   loweringtime = 0
   raisingtime = 0
