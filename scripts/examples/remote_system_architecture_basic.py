@@ -100,7 +100,7 @@ def main():
   # Main loop
   ser = serial.Serial('/dev/ttyUSB0', 9600)
   # flush serial buffer so that all previous commands are removed
-  ser.flush() 
+  ser.flushInput()
   sleep(.1) # wait for the buffer to be freed
   ###Calibration - new
   loweringtime = 0
