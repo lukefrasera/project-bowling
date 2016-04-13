@@ -54,17 +54,19 @@ class _GetchWindows:
 
 #################### FUNCTIONS ####################
 def ResetPins(loweringtime):
-  RaisePins()
+  RaisePins(raisingtime)
   #wait(z_seconds)
   LowerPins(loweringtime)
 
 def RaisePins():
-  while not RPIO.input(17):
-    TurnPinMotor(100, True, 0.1)
+    TurnPinMotor(100, True, DistToTime(distance))
 
 
 def LowerPins(distance):
   TurnPinMotor(100, False, DistToTime(distance))
+
+def StorePins(distance):
+  TurnPinMotor(100, True, DistToTime(distance))
 
 def DistToTime(dist):
   return dist
@@ -96,11 +98,11 @@ def main():
   get_char = _Getch()
   print "Program Ready!"
   # Main loop
-  ser = serial.Serial('/dev/ttyUSB0', 9600)
-  RPIO.setup(17,RPIO.IN, pull_up_down = RPIO.PUD_DOWN)
+
   ###Calibration - new
   loweringtime = 0
-  print "In calibration state"
+  raisingtime = 0
+  print "In play state"
   while True:
     button = ser.read(1)
     #button 1
@@ -108,37 +110,42 @@ def main():
       #lower for as long as button is pressed
       LowerPins(0.25)
       loweringtime += 0.25
-    #button 4
-    if button == '\x02':
-      # leave calibration loop
-      break
-    #button 3
-    # if button == '\x03':
-    #   RaisePins(6)
-   
-    ser.flushInput()
-  print "In play state"
-###Play - old
-  while True:
-    button = ser.read(1)
     #button 2
     if button == '\x00':
-      #storage: raise pins until the IR LED is flipped and end game - quit
-      RaisePins()
-      quit()
+      #raise for as long as button is pressed
+      RaisePins(0.25)
+      raisingtime += 0.25
+    
+    #button 3
+    if button == '\x03':
+      pass
+   
+   #button 4
+    if button == '\x02':
+      break
+
+    ser.flushInput()
+
+  print "In store and quit state"
+###Play - old
+  storetime = 0
+  while True:
+    button = ser.read(1)
     #button 1
     if button == '\x01':
-      #reset pins
-      ResetPins(loweringtime)
-    #button 4
-    if button == '\x02':
-      #emergency stop
+      pass
+    #button 2
+    if button == '\x00':
       pass
     #button 3
     if button == '\x03':
-      #emergency stop
-      pass
-    
+      #raises pins for as long as button is held
+      StorePins(0.25)
+      storetime += 0.25
+    #button 4
+    if button == '\x02':
+      #quits/closes program
+      quit()
     ser.flushInput()
   # close program
 
