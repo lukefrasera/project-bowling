@@ -97,6 +97,10 @@ def main():
   print "Program Ready!"
   # Main loop
   ser = serial.Serial('/dev/ttyUSB0', 9600)
+  # flush serial buffer so that all previous commands are removed
+  ser.flush() 
+  time.sleep(.1) # wait for the buffer to be freed
+
   RPIO.setup(17,RPIO.IN, pull_up_down = RPIO.PUD_DOWN)
   ###Calibration - new
   loweringtime = 0
