@@ -58,7 +58,7 @@ def ResetPins(loweringtime):
   #wait(z_seconds)
   LowerPins(loweringtime)
 
-def RaisePins():
+def RaisePins(distance):
     TurnPinMotor(100, True, DistToTime(distance))
 
 
