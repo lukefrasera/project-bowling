@@ -122,32 +122,33 @@ def main():
    
    #button 4
     if button == '\x02':
-      break
+      # break
+      quit()
 
     ser.flushInput()
     sleep(0.1)
   print "In store and quit state"
 ###Play - old
-  storetime = 0
-  while True:
-    button = ser.read(1)
-    #button 1
-    if button == '\x01':
-      pass
-    #button 2
-    if button == '\x00':
-      pass
-    #button 3
-    if button == '\x03':
-      #raises pins for as long as button is held
-      StorePins(0.25)
-      storetime += 0.25
-    #button 4
-    if button == '\x02':
-      #quits/closes program
-      quit()
-    ser.flushInput()
-    sleep(0.1)
+  # storetime = 0
+  # while True:
+  #   button = ser.read(1)
+  #   #button 1
+  #   if button == '\x01':
+  #     pass
+  #   #button 2
+  #   if button == '\x00':
+  #     pass
+  #   #button 3
+  #   if button == '\x03':
+  #     #raises pins for as long as button is held
+  #     StorePins(0.25)
+  #     storetime += 0.25
+  #   #button 4
+  #   if button == '\x02':
+  #     #quits/closes program
+  #     quit()
+    # ser.flushInput()
+    # sleep(0.1)
   # close program
 
 
