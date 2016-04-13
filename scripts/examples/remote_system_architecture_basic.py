@@ -125,7 +125,7 @@ def main():
       break
 
     ser.flushInput()
-
+    sleep(0.1)
   print "In store and quit state"
 ###Play - old
   storetime = 0
@@ -147,6 +147,7 @@ def main():
       #quits/closes program
       quit()
     ser.flushInput()
+    sleep(0.1)
   # close program
 
 
