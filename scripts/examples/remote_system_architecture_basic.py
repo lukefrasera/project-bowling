@@ -85,7 +85,18 @@ def TurnMotor(gpio_pin_pwm,gpio_pin_dir,speed,direction,duration):
   sleep(duration)
   RPIO.output(gpio_pin_pwm, False)
   print "Done Moving"
-  #RPIO.cleanup()
+  #RPIO.ctleanup()
+
+def SetupTurnMotor(gpio_pin_pwm, gpio_pin_dir):
+  RPIO.setup(gpio_pin_pwm, RPIO.OUT)
+  RPIO.setup(gpio_pin_dir, RPIO.OUT)
+  
+def StartTurnMotor(gpio_pin_pwm, gpio_pin_dir, direction):
+  RPIO.output(gpio_pin_dir, direction)
+  RPIO.output(gpio_pin_pwm, True)
+
+def StopTurnMotor(gpio_pin_pwm):
+  RPIO.output(gpio_pin_pwm, False)  
 
 def TurnPinMotor(speed,direction,duration):
   TurnMotor(19,6,speed,direction,duration)
@@ -98,26 +109,39 @@ def main():
   get_char = _Getch()
   print "Program Ready!"
   # Main loop
-  ser = serial.Serial('/dev/ttyUSB0', 9600)
+  ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=0.1)
   # flush serial buffer so that all previous commands are removed
   ser.flushInput()
   sleep(.1) # wait for the buffer to be freed
   ###Calibration - new
   loweringtime = 0
   raisingtime = 0
+  previos_button = None
   print "In play state"
   while True:
     button = ser.read(1)
+    if previos_button == None:
+      previos_button = button
     #button 1
     if button == '\x01':
       #lower for as long as button is pressed
-      LowerPins(0.25)
-      loweringtime += 0.25
+      # LowerPins(0.25)
+      StartTurnMotor(19, 6, False)
+      sleep(0.01)
+      loweringtime += 0.01
+      previos_button = button
+    elif previos_button == '\x01':
+      StopTurnMotor(19)
     #button 2
     if button == '\x00':
       #raise for as long as button is pressed
-      RaisePins(0.25)
-      raisingtime += 0.25
+      # RaisePins(0.25)
+      StartTurnMotor(19, 6, True)
+      sleep(0.01)
+      raisingtime += 0.01
+      previos_button = button
+    elif previos_button == '\x00':
+      StopTurnMotor(19)
     
     #button 3
     if button == '\x03':
